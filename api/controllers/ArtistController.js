@@ -172,16 +172,12 @@ module.exports = controller = {
 
   //  Private util methods
   _success: function(code, data, res) {
-    res.set('Content-Type', 'application/json');
-    res.send(code, JSON.stringify({
-      success: true,
-      data: data
-    }));
+    var data = { success: true, data: data };
+    res.json(data, code);
   },
   _error: function (code, err, res) {
-//    if(code == 404) console.error(err);
-    res.set('Content-Type', 'application/json');
-    res.send(code, JSON.stringify({ success: false,  error: err}));
+    var data = { success: false, message: err };
+    res.json(data, code);
   },
 
 

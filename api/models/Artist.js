@@ -12,7 +12,8 @@ module.exports = {
   	
   	RAname: {
       type: 'string',
-      required: true
+      required: true,
+      unique: true
     },
     RAurl: {
       type: 'string',
