@@ -28,6 +28,7 @@ module.exports = {
    */
   _config: {
     blueprints: {
+      actions: false,
       rest: false
     }
 
@@ -36,8 +37,10 @@ module.exports = {
   signUp: function(req, res) {
     var newUser = req.body;
     newUser.emailVerified = false;
+    newUser.subscriptions = [];
 
     User.create(newUser, function(err, user) {
+      sails.log(user);
       if(err) {
         res.json({ success: false, message: err }, err.status);
       } else {
@@ -48,27 +51,57 @@ module.exports = {
 
   login: function(req, res) {
     User.findOneByEmail(req.body.email).done(function (err, user) {
-      if (err) res.json({ error: 'DB error' }, 500);
+      if (err) res.json({ success: false, message: 'DB error' }, 500);
 
       if (user) {
         bcrypt.compare(req.body.password, user.password, function (err, match) {
-          if (err) res.json({ error: 'Server error' }, 500);
+          if (err) res.json({ success: false, message: 'Server error' }, 500);
 
           if (match) {
             // password match
             req.session.user = user.id;
-            res.json(user);
+            res.json({ success: true, data: user }, 200);
           } else {
             // invalid password
             if (req.session.user) req.session.user = null;
-            res.json({ error: 'Invalid password' }, 400);
+            res.json({ success: false, message: 'Invalid username/password' }, 403);
           }
         });
       } else {
-        res.json({ error: 'User not found' }, 404);
+        res.json({ success: false, message: 'Invalid username/password' }, 403);
       }
     });
-  }
+  },
+
+  userInfo: function(req, res) {
+    if(req.session.user) {
+      User.findOne(req.session.user).done(function(err, user) {
+        if(err) {
+          res.json({ success: false, message: err }, 500);
+        } else {
+          res.json({ success: true, data: user.toJSON() }, 200);
+        }
+      });
+    } else {
+      res.json({ success: false, message: 'Not logged in' }, 401);
+    }
+  },
+
+  update: function(req, res) {
+    if(req.session.user) {
+      var datas = req.body;
+
+      User.update(req.session.user, datas, function(err, user) {
+        if(err) {
+          res.json({ success: false, message: err }, err.status);
+        } else {
+          res.json({ success: true, data: user }, 200);
+        }
+      });
+    } else {
+      res.json({ success: false, message: 'Not logged in' }, 401);
+    }
+  },
 
   
 };
