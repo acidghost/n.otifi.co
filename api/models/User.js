@@ -80,6 +80,8 @@ module.exports = {
           }
         }
       });
+    } else {
+      next();
     }
   },
 
@@ -96,6 +98,11 @@ module.exports = {
         next();
       });
     });
+  },
+
+  afterCreate: function(newUser, next) {
+    //TODO: send verification email
+    
   }
 
 };

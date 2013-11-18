@@ -17,7 +17,7 @@
 
 var bcrypt = require('bcrypt');
 
-module.exports = {
+module.exports = controller =  {
     
   
 
@@ -40,11 +40,20 @@ module.exports = {
     newUser.subscriptions = [];
 
     User.create(newUser, function(err, user) {
-      sails.log(user);
       if(err) {
-        res.json({ success: false, message: err }, err.status);
+        res.json({ success: false, message: err }, 400);
       } else {
-        res.json({ success: true, data: user }, 200);
+        if(controller._sendEmail()) {
+          res.json({ success: true, data: user }, 200);
+        } else {
+          user.destroy(function(err) {
+            if(err) {
+              res.json({ success: false, message: err }, 500);
+            } else {
+              res.json({ success: false, message: 'Unable to send verification email' }, 500);
+            }
+          });
+        }
       }
     });
   },
@@ -93,7 +102,7 @@ module.exports = {
 
       User.update(req.session.user, datas, function(err, user) {
         if(err) {
-          res.json({ success: false, message: err }, err.status);
+          res.json({ success: false, message: err }, 400);
         } else {
           res.json({ success: true, data: user }, 200);
         }
@@ -102,6 +111,11 @@ module.exports = {
       res.json({ success: false, message: 'Not logged in' }, 401);
     }
   },
+
+
+
+  // Private util methods:
+  _sendEmail: function() { return false; }
 
   
 };
