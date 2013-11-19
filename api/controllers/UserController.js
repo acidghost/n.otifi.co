@@ -43,17 +43,7 @@ module.exports = controller =  {
       if(err) {
         res.json({ success: false, message: err }, 400);
       } else {
-        if(controller._sendEmail()) {
-          res.json({ success: true, data: user }, 200);
-        } else {
-          user.destroy(function(err) {
-            if(err) {
-              res.json({ success: false, message: err }, 500);
-            } else {
-              res.json({ success: false, message: 'Unable to send verification email' }, 500);
-            }
-          });
-        }
+        res.json({ success: true, data: user }, 200);
       }
     });
   },
@@ -100,22 +90,40 @@ module.exports = controller =  {
     if(req.session.user) {
       var datas = req.body;
 
-      User.update(req.session.user, datas, function(err, user) {
-        if(err) {
-          res.json({ success: false, message: err }, 400);
-        } else {
-          res.json({ success: true, data: user }, 200);
-        }
-      });
+      if(datas.code) {
+        // Verify email address
+        User.findOne(req.session.user).done(function(err, user) {
+          if(err) {
+            res.json({ success: false, message: err }, 400);
+          } else {
+            if(user.code === datas.code) {
+              user.emailVerified = true;
+              user.code = null;
+              user.save(function(err) {
+                if(err) {
+                  res.json({ success: false, message: err }, 500);
+                } else {
+                  res.json({ success: true, data: user }, 200);
+                }
+              });
+            } else {
+              res.json({ success: false, data: 'Verification code not valid' }, 400);
+            }
+          }
+        });
+      } else {
+        User.update(req.session.user, datas, function(err, user) {
+          if(err) {
+            res.json({ success: false, message: err }, 400);
+          } else {
+            res.json({ success: true, data: user }, 200);
+          }
+        });
+      }
     } else {
       res.json({ success: false, message: 'Not logged in' }, 401);
     }
-  },
-
-
-
-  // Private util methods:
-  _sendEmail: function() { return false; }
+  }
 
   
 };

@@ -6,6 +6,8 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
+var bcrypt = require('bcrypt');
+
 module.exports = {
 
   attributes: {
@@ -24,6 +26,9 @@ module.exports = {
     emailVerified: {
       type: 'boolean'
     },
+    code: {
+      type: 'string'
+    },
     subscriptions: {
       type: 'array'
     },
@@ -33,6 +38,7 @@ module.exports = {
       delete obj.createdAt;
       delete obj.updatedAt;
       delete obj.password;
+      delete obj.code;
       return obj;
     }
     
@@ -86,8 +92,6 @@ module.exports = {
   },
 
   beforeCreate: function(attrs, next) {
-    var bcrypt = require('bcrypt');
-
     bcrypt.genSalt(10, function(err, salt) {
       if (err) return next(err);
 
@@ -101,8 +105,64 @@ module.exports = {
   },
 
   afterCreate: function(newUser, next) {
-    //TODO: send verification email
-    
+    var mandrill = require('mandrill-api/mandrill');
+    var mandrill_client = new mandrill.Mandrill(sails.config.mandrill.test.apiKey);
+
+    var current_date = (new Date()).valueOf().toString();
+    var random = Math.random().toString();
+    var code = bcrypt.hashSync(current_date+random, 1);
+
+    var templateName = "email-verification-template";
+    var templateContent = [
+      {
+        name: "header",
+        content: "<h1>n.otifi.co</h1>"
+      },
+      {
+        name: "main",
+        content: "<p>Please verify your e-mail address by inserting this verification code: <b>"+code+"</b>.</p>"
+      },
+      {
+        name: "footer",
+        content: "<p>n.otifi.co</p>"
+      }
+    ];
+    var message = {
+      text: "Please, verify your email address by inserting this verification code: "+code+".",
+      tags: ["email-verification"],
+      to: [{
+        email: newUser.email,
+        name: newUser.email,
+        type: "to"
+      }]
+    };
+    mandrill_client.messages.sendTemplate(
+      {
+        template_name: templateName,
+        template_content: templateContent,
+        message: message,
+        async: false
+      },
+      function(result) {
+        if(result.length > 0 && result[0].status == 'sent') {
+          User.update(newUser.id, { code: code }, function(err, user) {
+            if(err) {
+              return next(err);
+            } else {
+              next(user);
+            }
+          });
+        } else {
+          //TODO: manage not sent e-mails
+          next(user);
+        }
+      },
+      function(e) {
+        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+        newUser.destroy();
+        return next(e);
+      }
+    );
   }
 
 };

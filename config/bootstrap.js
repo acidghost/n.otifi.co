@@ -11,6 +11,12 @@
 module.exports.bootstrap = function (cb) {
 
   this.apiVersion = 'v1';
+  this.host = (this.environment == 'development') ? ('localhost') : ('notifico.herokuapp.com');
+  if(this.environment == 'development') {
+    this.host = "http://localhost:"+this.port;
+  } else {
+    this.host = "http://notifico.herokuapp.com";
+  }
 
   // It's very important to trigger this callack method when you are finished 
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
