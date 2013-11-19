@@ -59,6 +59,7 @@ module.exports = controller =  {
           if (match) {
             // password match
             req.session.user = user.id;
+            req.session.authenticated = true;
             res.json({ success: true, data: user }, 200);
           } else {
             // invalid password
@@ -73,55 +74,47 @@ module.exports = controller =  {
   },
 
   userInfo: function(req, res) {
-    if(req.session.user) {
-      User.findOne(req.session.user).done(function(err, user) {
-        if(err) {
-          res.json({ success: false, message: err }, 500);
-        } else {
-          res.json({ success: true, data: user.toJSON() }, 200);
-        }
-      });
-    } else {
-      res.json({ success: false, message: 'Not logged in' }, 401);
-    }
+    User.findOne(req.session.user).done(function(err, user) {
+      if(err) {
+        res.json({ success: false, message: err }, 500);
+      } else {
+        res.json({ success: true, data: user.toJSON() }, 200);
+      }
+    });
   },
 
   update: function(req, res) {
-    if(req.session.user) {
-      var datas = req.body;
+    var datas = req.body;
 
-      if(datas.code) {
-        // Verify email address
-        User.findOne(req.session.user).done(function(err, user) {
-          if(err) {
-            res.json({ success: false, message: err }, 400);
+    if(datas.code) {
+      // Verify email address
+      User.findOne(req.session.user).done(function(err, user) {
+        if(err) {
+          res.json({ success: false, message: err }, 400);
+        } else {
+          if(user.code === datas.code) {
+            user.emailVerified = true;
+            user.code = null;
+            user.save(function(err) {
+              if(err) {
+                res.json({ success: false, message: err }, 500);
+              } else {
+                res.json({ success: true, data: user }, 200);
+              }
+            });
           } else {
-            if(user.code === datas.code) {
-              user.emailVerified = true;
-              user.code = null;
-              user.save(function(err) {
-                if(err) {
-                  res.json({ success: false, message: err }, 500);
-                } else {
-                  res.json({ success: true, data: user }, 200);
-                }
-              });
-            } else {
-              res.json({ success: false, data: 'Verification code not valid' }, 400);
-            }
+            res.json({ success: false, data: 'Verification code not valid' }, 400);
           }
-        });
-      } else {
-        User.update(req.session.user, datas, function(err, user) {
-          if(err) {
-            res.json({ success: false, message: err }, 400);
-          } else {
-            res.json({ success: true, data: user }, 200);
-          }
-        });
-      }
+        }
+      });
     } else {
-      res.json({ success: false, message: 'Not logged in' }, 401);
+      User.update(req.session.user, datas, function(err, user) {
+        if(err) {
+          res.json({ success: false, message: err }, 400);
+        } else {
+          res.json({ success: true, data: user }, 200);
+        }
+      });
     }
   }
 

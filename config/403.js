@@ -18,35 +18,44 @@ module.exports[403] = function badRequest(message, req, res) {
    * the same interface for receiving socket messages.
    */
 
-  var viewFilePath = '403';
-  var statusCode = 403;
-
-  var result = {
-    status: statusCode
+  var response = {
+    success: false,
+    message: message
   };
 
-  // Optional message
-  if (message) {
-    result.message = message;
+  if(req.wantsJSON) {
+    return res.json(response, 403);
   }
 
-  // If the user-agent wants a JSON response, send json
-  if (req.wantsJSON) {
-    return res.json(result, result.status);
-  }
-
-  // Set status code and view locals
-  res.status(result.status);
-  for (var key in result) {
-    res.locals[key] = result[key];
-  }
-  // And render view
-  res.render(viewFilePath, result, function (err) {
-    // If the view doesn't exist, or an error occured, send json
-    if (err) { return res.json(result, result.status); }
-    
-    // Otherwise, serve the `views/403.*` page
-    res.render(viewFilePath);
-  });
+//  var viewFilePath = '403';
+//  var statusCode = 403;
+//
+//  var result = {
+//    status: statusCode
+//  };
+//
+//  // Optional message
+//  if (message) {
+//    result.message = message;
+//  }
+//
+//  // If the user-agent wants a JSON response, send json
+//  if (req.wantsJSON) {
+//    return res.json(result, result.status);
+//  }
+//
+//  // Set status code and view locals
+//  res.status(result.status);
+//  for (var key in result) {
+//    res.locals[key] = result[key];
+//  }
+//  // And render view
+//  res.render(viewFilePath, result, function (err) {
+//    // If the view doesn't exist, or an error occured, send json
+//    if (err) { return res.json(result, result.status); }
+//
+//    // Otherwise, serve the `views/403.*` page
+//    res.render(viewFilePath);
+//  });
 
 };
