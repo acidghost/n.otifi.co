@@ -11,7 +11,6 @@
 module.exports.bootstrap = function (cb) {
 
   this.apiVersion = 'v1';
-  this.host = (this.environment == 'development') ? ('localhost') : ('notifico.herokuapp.com');
   if(this.environment == 'development') {
     this.host = "http://localhost:"+this.port;
   } else {

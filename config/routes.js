@@ -52,6 +52,16 @@ module.exports.routes = {
   'put /api/v1/user/me': {
     controller: 'UserController',
     action: 'update'
+  },
+
+  //  Routes to Events
+  'get /api/v1/events/:artist': {
+    controller: 'EventController',
+    action: 'findEvents'
+  },
+  'get /api/v1/events/mine/:artist': {
+    controller: 'EventController',
+    action: 'mineEvents'
   }
 
   /*
