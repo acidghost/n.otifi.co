@@ -73,7 +73,8 @@ module.exports = {
           if(cheerio(divElm).hasClass('im-list')) {
             var firstUpcomingDiv = cheerio(divElm).next('div');
             var urlTag = cheerio(firstUpcomingDiv).find('a[itemprop="url"]');
-            var eventID = urlTag.attr('href').split('?')[1];
+            var eventUrl = urlTag.attr('href');
+            var eventID = eventUrl.split('?')[1];
             var eventName = urlTag.text();
             var eventNameSplitted = eventName.split(' at ');
             var eventLocation = eventNameSplitted[eventNameSplitted.length-1];
@@ -91,14 +92,16 @@ module.exports = {
                 address: null
               },
               startDate: startDate,
-              endDate: endDate || null
+              endDate: endDate || null,
+              eventUrl: 'http://www.residentadvisor.net'+eventUrl
             };
           }
 
           // Getting the remaining upcoming events
           if(cheerio(divElm).attr('itemtype') == 'http://data-vocabulary.org/Event') {
             var aLinks = cheerio(divElm).find('a[itemprop="url summary"]');
-            var evntID = cheerio(aLinks).attr('href').split('?')[1];
+            var eventUrl = cheerio(aLinks).attr('href');
+            var evntID = eventUrl.split('?')[1];
             var evntName = cheerio(aLinks).text();
             var evntLocation = cheerio(divElm)
               .find('span[itemprop="name"] > a')
@@ -120,7 +123,8 @@ module.exports = {
                 address: evntAddress
               },
               startDate: startDate,
-              endDate: endDate || null
+              endDate: endDate || null,
+              eventUrl: 'http://www.residentadvisor.net'+eventUrl
             };
           }
 
@@ -130,7 +134,14 @@ module.exports = {
 
         });
 
-        res.json({ success: true, data: upcomingEvents });
+        Artist.findOne({ RAname: artist }).done(function(err, artist) {
+          if(!err && artist) {
+            artist.href = sails.config.host+sails.config.controllers.blueprints.prefix+'/artist/'+artist.RAname;
+            res.json({ success: true, artist: artist, data: upcomingEvents });
+          } else {
+            res.json({ success: true, artist: null, data: upcomingEvents });
+          }
+        });
       }
 
     });
@@ -146,7 +157,8 @@ module.exports = {
       eventLocation: eventData.location.name,
       eventAddress: eventData.location.address,
       eventStartDate: eventData.startDate,
-      eventEndDate: eventData.endDate
+      eventEndDate: eventData.endDate,
+      eventUrl: eventData.eventUrl
     };
     Event.create(newEvent).done(function(err, newEvent) {
       if(err) {

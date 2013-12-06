@@ -38,6 +38,13 @@ module.exports = controller = {
   //  GET REST blueprint
   find: function (req, res) {
     var q = req.param('id');
+
+    Artist.find({ RAname: q }).done(function(err, artists) {
+      if(!err && artists.length>0) {
+        controller._success(200, artists, res);
+      }
+    });
+
     var url = raSearchUrl + encodeURIComponent(q);
     var redirected = false;
 

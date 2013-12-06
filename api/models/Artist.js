@@ -28,6 +28,17 @@ module.exports = {
       type: 'string',
       required: true,
       url: true
+    },
+    events: {
+      type: 'array'
+    },
+
+    toJSON: function() {
+      var obj = this.toObject();
+      delete obj.createdAt;
+      delete obj.updatedAt;
+      delete obj.events;
+      return obj;
     }
     
   }

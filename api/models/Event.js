@@ -32,6 +32,11 @@ module.exports = {
     },
     eventEndDate: {
       type: 'date'
+    },
+    eventUrl: {
+      type: 'string',
+      required: true,
+      url: true
     }
     
   }
