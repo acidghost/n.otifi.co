@@ -49,6 +49,12 @@ module.exports = controller =  {
   },
 
   login: function(req, res) {
+    if(req.body == '' || !req.body.email || !req.body.password) {
+      console.log('missing credentials');
+      res.json({ success: false, message: 'Some credentials are missing' }, 400);
+      return;
+    }
+
     User.findOneByEmail(req.body.email).done(function (err, user) {
       if (err) res.json({ success: false, message: 'DB error' }, 500);
 
