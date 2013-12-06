@@ -36,8 +36,43 @@ module.exports = {
 
   findEvents: function(req, res) {
 
-    var artist = req.param('artist');
+    var q = req.param('artist');
 
+    Artist.findOne({ RAname: q }).done(function(error, artist) {
+
+      if(error) {
+        res.json({ success: false, message: error }, 500);
+      }
+
+      if(artist) {
+        var eventsIDs = artist.events;
+        var upcomingEvents = [];
+        var pastEvents = [];
+        Event.findByEventIDIn(eventsIDs).sort('eventStartDate ASC').done(function(err, events) {
+
+          if(err) {
+            res.json({ success: false, message: err }, 500);
+          }
+
+          var now = new Date();
+          for(var i in events) {
+            var event = events[i];
+            var evntDate = new Date(event.eventStartDate);
+            if(evntDate < now) {
+              pastEvents.push(event);
+            } else {
+              upcomingEvents.push(event);
+            }
+          }
+
+          res.json({ success: true, data: { upcoming: upcomingEvents, past: pastEvents } });
+
+        });
+      } else {
+        res.json({ success: false, message: 'Artist not found' }, 404);
+      }
+
+    });
 
   },
 

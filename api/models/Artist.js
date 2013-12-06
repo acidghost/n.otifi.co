@@ -37,7 +37,8 @@ module.exports = {
       var obj = this.toObject();
       delete obj.createdAt;
       delete obj.updatedAt;
-      delete obj.events;
+      obj.events = {};
+      obj.events.href = sails.config.host+sails.config.controllers.blueprints.prefix+'/events/'+obj.RAname
       return obj;
     }
     
