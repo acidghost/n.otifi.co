@@ -65,7 +65,7 @@ module.exports = {
             }
           }
 
-          res.json({ success: true, data: { upcoming: upcomingEvents, past: pastEvents } });
+          res.json({ success: true, artist: artist, data: { upcoming: upcomingEvents, past: pastEvents } });
 
         });
       } else {
@@ -171,7 +171,6 @@ module.exports = {
 
         Artist.findOne({ RAname: artist }).done(function(err, artist) {
           if(!err && artist) {
-            artist.href = sails.config.host+sails.config.controllers.blueprints.prefix+'/artist/'+artist.RAname;
             res.json({ success: true, artist: artist, data: upcomingEvents });
           } else {
             res.json({ success: true, artist: null, data: upcomingEvents });
