@@ -67,6 +67,33 @@ module.exports = {
 
         $.map(function(i, divElm) {
 
+          var minedEvent = {};
+
+          // Getting the first of upcoming events
+          if(cheerio(divElm).hasClass('im-list')) {
+            var firstUpcomingDiv = cheerio(divElm).next('div');
+            var urlTag = cheerio(firstUpcomingDiv).find('a[itemprop="url"]');
+            var eventID = urlTag.attr('href').split('?')[1];
+            var eventName = urlTag.text();
+            var eventNameSplitted = eventName.split(' at ');
+            var eventLocation = eventNameSplitted[eventNameSplitted.length-1];
+            eventNameSplitted.pop();
+            eventName = eventNameSplitted.join(' at ');
+            var startDate = cheerio(firstUpcomingDiv).find('time[itemprop="startDate"]').attr('datetime');
+            var endDate = cheerio(firstUpcomingDiv).find('time[itemprop="endDate"]').attr('datetime');
+            minedEvent = {
+              eventID: eventID,
+              eventName: eventName,
+              location: {
+                name: eventLocation,
+                address: null
+              },
+              startDate: startDate,
+              endDate: endDate || null
+            };
+          }
+
+          // Getting the remaining upcoming events
           if(cheerio(divElm).attr('itemtype') == 'http://data-vocabulary.org/Event') {
             var aLinks = cheerio(divElm).find('a[itemprop="url summary"]');
             var evntID = cheerio(aLinks).attr('href').split('?')[1];
@@ -80,8 +107,8 @@ module.exports = {
             var startDate = cheerio(divElm).find('time[itemprop="startDate"]')
               .attr('datetime');
             var endDate = cheerio(divElm).find('time[itemprop="endDate"]')
-              .attr('datetime') || null;
-            upcomingEvents.push({
+              .attr('datetime');
+            minedEvent = {
               eventID: evntID,
               eventName: evntName,
               location: {
@@ -89,13 +116,17 @@ module.exports = {
                 address: evntAddress
               },
               startDate: startDate,
-              endDate: endDate
-            });
+              endDate: endDate || null
+            };
+          }
+
+          if(minedEvent.eventID) {
+            upcomingEvents.push(minedEvent);
           }
 
         });
 
-        res.json({ success: true, datas: upcomingEvents });
+        res.json({ success: true, data: upcomingEvents });
       }
 
     });
