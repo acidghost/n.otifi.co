@@ -39,6 +39,15 @@ module.exports = {
       delete obj.updatedAt;
       delete obj.password;
       delete obj.code;
+      var oldSubscriptions = obj.subscriptions;
+      obj.subscriptions = [];
+      for(var i in oldSubscriptions) {
+        var artist = oldSubscriptions[i];
+        obj.subscriptions.push({
+          RAname: artist,
+          href: sails.config.host+sails.config.controllers.blueprints.prefix+'/artist/'+artist
+        });
+      }
       return obj;
     }
     
