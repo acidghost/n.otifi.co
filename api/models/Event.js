@@ -10,9 +10,29 @@ module.exports = {
 
   attributes: {
   	
-  	/* e.g.
-  	nickname: 'string'
-  	*/
+  	eventID: {
+      type: 'integer',
+      required: true,
+      unique: true
+    },
+    eventName: {
+      type: 'string',
+      required: true
+    },
+    eventLocation: {
+      type: 'string',
+      required: true
+    },
+    eventAddress: {
+      type: 'string'
+    },
+    eventStartDate: {
+      type: 'date',
+      required: true
+    },
+    eventEndDate: {
+      type: 'date'
+    }
     
   }
 

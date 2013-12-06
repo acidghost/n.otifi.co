@@ -79,8 +79,10 @@ module.exports = {
             var eventLocation = eventNameSplitted[eventNameSplitted.length-1];
             eventNameSplitted.pop();
             eventName = eventNameSplitted.join(' at ');
-            var startDate = cheerio(firstUpcomingDiv).find('time[itemprop="startDate"]').attr('datetime');
+            var startDate = cheerio(firstUpcomingDiv).find('time[itemprop="startDate"]').attr('datetime').split('T')[0];
             var endDate = cheerio(firstUpcomingDiv).find('time[itemprop="endDate"]').attr('datetime');
+            if(endDate != undefined)
+              endDate = endDate.split('T')[0];
             minedEvent = {
               eventID: eventID,
               eventName: eventName,
@@ -105,9 +107,11 @@ module.exports = {
               .find('span[itemprop="location"] span[itemprop="address"] a')
               .text();
             var startDate = cheerio(divElm).find('time[itemprop="startDate"]')
-              .attr('datetime');
+              .attr('datetime').split('T')[0];
             var endDate = cheerio(divElm).find('time[itemprop="endDate"]')
               .attr('datetime');
+            if(endDate != undefined)
+              endDate = endDate.split('T')[0];
             minedEvent = {
               eventID: evntID,
               eventName: evntName,
@@ -129,6 +133,71 @@ module.exports = {
         res.json({ success: true, data: upcomingEvents });
       }
 
+    });
+
+  },
+
+  addEvent: function(req, res) {
+
+    var eventData = req.body;
+    var newEvent = {
+      eventID: eventData.eventID,
+      eventName: eventData.eventName,
+      eventLocation: eventData.location.name,
+      eventAddress: eventData.location.address,
+      eventStartDate: eventData.startDate,
+      eventEndDate: eventData.endDate
+    };
+    Event.create(newEvent).done(function(err, newEvent) {
+      if(err) {
+        res.json({ success: false, message: err }, 400);
+      } else {
+        res.json({ success: true, data: newEvent });
+      }
+    });
+
+  },
+
+  updateEvent: function(req, res) {
+
+    var eventID = req.param('eventID');
+    var eventData = req.body;
+    Event.findOne({ eventID: eventID }).done(function(err, foundEvent) {
+      if(foundEvent) {
+        foundEvent.eventName = eventData.eventName;
+        foundEvent.eventLocation = eventData.location.name;
+        foundEvent.eventAddress = eventData.location.address;
+        foundEvent.eventStartDate = eventData.startDate;
+        foundEvent.eventEndDate = eventData.endDate;
+        foundEvent.save(function(err) {
+          if(err) {
+            res.json({ success: false, message: err }, 400);
+          } else {
+            res.json({ success: true, data: foundEvent });
+          }
+        });
+      } else {
+        res.json({ success: false, message: 'Event not found' }, 404);
+      }
+    });
+
+  },
+
+  destroyEvent: function(res, req) {
+
+    var eventID = req.param('eventID');
+    Event.findOne({ eventID: eventID }).done(function(err, event){
+      if(event) {
+        event.destroy(function(err) {
+          if(err) {
+            res.json({ success: false, message: err }, 400);
+          } else {
+            res.json({ success: true, data: event });
+          }
+        })
+      } else {
+        res.json({ success:false, message: 'Event not found' }, 404);
+      }
     });
 
   }

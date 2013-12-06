@@ -59,9 +59,27 @@ module.exports.routes = {
     controller: 'EventController',
     action: 'findEvents'
   },
-  'get /api/v1/events/mine/:artist': {
+  'get /api/v1/events/:artist/mine': {
     controller: 'EventController',
     action: 'mineEvents'
+  },
+  'post /api/v1/events': {
+    controller: 'EventController',
+    action: 'addEvent'
+  },
+  'put /api/v1/events/:eventID': {
+    controller: 'EventController',
+    action: 'updateEvent'
+  },
+  'delete /api/v1/events/:eventID': {
+    controller: 'EventController',
+    action: 'destroyEvent'
+  },
+
+  //  Routes to Crawler
+  'post /crawler/updateEventsBase': {
+    controller: 'CrawlerController',
+    action: 'updateEventsBase'
   }
 
   /*
