@@ -142,21 +142,21 @@ module.exports = function (grunt) {
       dev: {
         files: [
           {
-          expand: true,
-          cwd: './assets',
-          src: ['**/*.!(coffee)'],
-          dest: '.tmp/public'
-        }
+            expand: true,
+            cwd: './assets',
+            src: ['**/!(bower).!(coffee|less)', '.htaccess', '!**/demo-js/**'],
+            dest: '.tmp/public'
+          }
         ]
       },
       build: {
         files: [
           {
-          expand: true,
-          cwd: '.tmp/public',
-          src: ['**/*'],
-          dest: 'www'
-        }
+            expand: true,
+            cwd: '.tmp/public',
+            src: ['**/*', '.htaccess'],
+            dest: 'www'
+          }
         ]
       }
     },
@@ -186,18 +186,18 @@ module.exports = function (grunt) {
       dev: {
         files: [
           {
-          expand: true,
-          cwd: 'assets/styles/',
-          src: ['*.less'],
-          dest: '.tmp/public/styles/',
-          ext: '.css'
-        }, {
-          expand: true,
-          cwd: 'assets/linker/styles/',
-          src: ['*.less'],
-          dest: '.tmp/public/linker/styles/',
-          ext: '.css'
-        }
+            expand: true,
+            cwd: 'assets/styles/',
+            src: ['*.less'],
+            dest: '.tmp/public/styles/',
+            ext: '.css'
+          }, {
+            expand: true,
+            cwd: 'assets/linker/styles/',
+            src: ['*.less'],
+            dest: '.tmp/public/linker/styles/',
+            ext: '.css'
+          }
         ]
       }
     },
@@ -421,10 +421,10 @@ module.exports = function (grunt) {
 
   grunt.registerTask('compileAssets', [
     'clean:dev',
-    'jst:dev',
+    //'jst:dev',
     'less:dev',
     'copy:dev',    
-    'coffee:dev'
+    //'coffee:dev'
   ]);
 
   grunt.registerTask('linkAssets', [
@@ -451,10 +451,10 @@ module.exports = function (grunt) {
   // When sails is lifted in production
   grunt.registerTask('prod', [
     'clean:dev',
-    'jst:dev',
+    //'jst:dev',
     'less:dev',
     'copy:dev',
-    'coffee:dev',
+    //'coffee:dev',
     'concat',
     'uglify',
     'cssmin',
