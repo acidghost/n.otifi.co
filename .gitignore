@@ -44,3 +44,10 @@ nbproject
 ########################
 config/local.js
 .slocApi
+
+
+########################
+# client
+########################
+assets/bower_components
+www
