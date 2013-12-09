@@ -13,12 +13,14 @@
 		<title>n.otifi.co | Get updated on your favourite DJs' next events!</title>
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width">
-		<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
 		<!-- build:css(.tmp) styles/main.css -->
-		<link rel="stylesheet" href="styles/main.css">
+		<!--<link rel="stylesheet" href="styles/main.css">-->
 		<!-- endbuild -->
+
+		<!--STYLES-->
+		<!--STYLES END-->
 	</head>
 	<body ng-app="n.otifi.coApp">
 		<!--[if lt IE 7]>
@@ -33,7 +35,14 @@
 		<![endif]-->
 
 		<!-- Add your site or application content here -->
-		<div class="container" ng-view=""></div>
+		<div class="container">
+
+			<div class="jumbotron">
+				<div ng-controller="NavCtrl" ng-include="navbarTemplate"></div>
+				<div ng-view=""></div>
+			</div>
+
+		</div>
 
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
 		<script>
@@ -63,9 +72,7 @@
 		<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
 		<!-- endbuild -->
 
-		<!-- build:js({.tmp,app}) scripts/scripts.js -->
-		<script src="scripts/app.js"></script>
-		<script src="scripts/controllers/main.js"></script>
-		<!-- endbuild -->
+		<!--SCRIPTS-->
+		<!--SCRIPTS END-->
 	</body>
 </html>

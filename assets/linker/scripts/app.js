@@ -4,7 +4,7 @@ angular.module('n.otifi.coApp', [])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
+        templateUrl: 'linker/views/main.html',
         controller: 'MainCtrl'
       })
       .otherwise({
