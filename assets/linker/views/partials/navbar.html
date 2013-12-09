@@ -14,9 +14,9 @@
 		<button type="submit" class="btn btn-primary btn-xs">Login</button>
 	</form>
 
-	<form id="search-form" class="navbar-form pull-right" role="search">
+	<form id="search-form" ng-controller="SearchCtrl" ng-submit="search()" class="navbar-form pull-right" role="search">
 		<div class="form-group col-xs-8">
-			<input type="text" class="form-control input-sm" placeholder="Artist" />
+			<input ng-model="name" type="text" class="form-control input-sm" placeholder="Artist" />
 		</div>
 		<button type="submit" class="btn btn-primary btn-xs">Search</button>
 	</form>
