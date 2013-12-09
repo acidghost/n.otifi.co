@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('n.otifi.coApp')
+angular.module('n.coApp')
   .controller('MainCtrl', function ($scope) {
 
 

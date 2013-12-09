@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('n.otifi.coApp')
+angular.module('n.coApp')
   .controller('NavCtrl', function ($scope, $location) {
 
     $scope.navbarTemplate = "linker/views/partials/navbar.html";

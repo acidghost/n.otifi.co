@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('n.otifi.coApp', [])
+angular.module('n.coApp', [])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -10,4 +10,7 @@ angular.module('n.otifi.coApp', [])
       .otherwise({
         redirectTo: '/'
       });
+  })
+  .constant('CONFIGS', {
+    apiPrefix: '/api/v1'
   });
