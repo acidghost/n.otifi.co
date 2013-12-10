@@ -48,5 +48,9 @@ angular.module('n.coApp')
       }
     };
 
+    $scope.search = function() {
+      $location.path('/search/'+$scope.name);
+    };
+
   });
 
