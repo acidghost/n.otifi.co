@@ -5,15 +5,25 @@
 	</section>
 
 	<section class="col-xs-7">
-		<div class="content">
-			<p>
-				<b>n.otifi.co</b> is a webapp that allows you to get instantly updated
-				whenever one of your favourite artists submit a new date on
-				<a href="http://www.residentadvisor.net/">
-					<abbr title="Resident Advisor">RA</abbr></abbr>
-				</a>.
-			</p>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<p>
+					<b>{{ CONFIGS.appName }}</b> is a webapp that allows you to get instantly updated
+					whenever one of your favourite artists submit a new date on
+					<a href="http://www.residentadvisor.net/">
+						<abbr title="Resident Advisor">RA</abbr></abbr>
+					</a>.
+				</p>
+			</div>
 		</div>
+
+		<hr class="red" />
+
+		<div class="row">
+			<div class="col-xs-12" ng-controller="SignupCtrl" ng-include="signupFormTemplate"></div>
+		</div>
+
 	</section>
 
 </div>
