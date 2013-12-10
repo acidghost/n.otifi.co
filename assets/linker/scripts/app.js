@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('n.coApp', ['n.coResources'])
+angular.module('n.coApp', ['n.coResources', 'n.coServices', 'n.coDirectives'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
