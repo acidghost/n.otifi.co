@@ -2,16 +2,18 @@
 
 var appServices = angular.module('n.coServices', []);
 
-appServices.service('Signup', ['CONFIGS', '$http', function(CONFIGS, $http) {
+appServices.service('Signup', ['CONFIGS', '$http', '$q', function(CONFIGS, $http, $q) {
 
   this.register = function(userData) {
-    return $http.post('/signup', userData)
+    var delay = $q.defer();
+    $http.post('/signup', userData)
       .success(function(data, status, headers, config) {
-        return [status, data];
+        delay.resolve([status, data]);
       })
       .error(function(data, status, headers, config) {
-        return [status, data];
+        delay.reject([status, data]);
       });
+    return delay.promise;
   };
 
 }]);
