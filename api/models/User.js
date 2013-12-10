@@ -156,9 +156,9 @@ module.exports = {
         if(result.length > 0 && result[0].status == 'sent') {
           User.update(newUser.id, { code: code }, function(err, user) {
             if(err) {
-              return next(err);
+              return next(err, user);
             } else {
-              next(user);
+              next(err, user);
             }
           });
         } else {
