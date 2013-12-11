@@ -1,7 +1,28 @@
 'use strict';
 
 angular.module('n.coApp')
-  .controller('NavCtrl', function ($scope, $location) {
+  .controller('NavCtrl', ['$scope', '$location', '$timeout', 'Login', function ($scope, $location, $timeout, Login) {
+
+    $scope.loggedIn = false;
+
+    $scope.login = function(email, password) {
+      Login.perform(email, password)
+        .then(function(response) {
+          // Success callback
+          $scope.loginMessageClass = 'alert-success';
+          $scope.loginMessage = 'Successfully logged in!';
+          $timeout(function() {
+            $('#login-form').slideUp();
+            $scope.loggedIn = true;
+          }, 2000);
+        }, function(response) {
+          // Error callback
+          $('#login-form .form-group').attr('class', 'form-group has-error');
+          $scope.loginMessageClass = 'alert-danger';
+          $scope.loginMessage = response[1].message;
+          $scope.loggedIn = false;
+        });
+    };
 
     $scope.navbarTemplate = "linker/views/partials/navbar.html";
 
@@ -52,5 +73,5 @@ angular.module('n.coApp')
       $location.path('/search/'+$scope.name);
     };
 
-  });
+  }]);
 

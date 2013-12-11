@@ -4,14 +4,15 @@
 		<a class="navbar-brand" href="#/">{{ CONFIGS.appName }}</a>
 	</div>
 
-	<form id="login-form" class="navbar-form pull-right">
+	<form ng-hide="loggedIn == true" name="loginForm" id="login-form"  class="navbar-form pull-right">
 		<div class="form-group col-xs-5">
-			<input type="email" class="form-control input-sm" placeholder="E-mail" />
+			<input ng-model="email" required type="email" class="form-control input-sm" placeholder="E-mail" />
 		</div>
 		<div class="form-group col-xs-5">
-			<input type="password" class="form-control input-sm" placeholder="Password" />
+			<input ng-model="password" required type="password" class="form-control input-sm" placeholder="Password" />
 		</div>
-		<button type="submit" class="btn btn-primary btn-xs">Login</button>
+		<button ng-click="login(email, password)" ng-disabled="!loginForm.$valid" type="submit" class="btn btn-primary btn-xs">Login</button>
+		<div class="help-block alert {{ loginMessageClass }} pull-right">{{ loginMessage }}</div>
 	</form>
 
 	<form id="search-form" ng-submit="search()" class="navbar-form pull-right" role="search">

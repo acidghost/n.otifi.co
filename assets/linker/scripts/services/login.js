@@ -1,12 +1,12 @@
 'use strict';
 
-var appServices = angular.module('n.coServices.signup', []);
+var appServices = angular.module('n.coServices.login', []);
 
-appServices.service('Signup', ['CONFIGS', '$http', '$q', function(CONFIGS, $http, $q) {
+appServices.service('Login', ['$http', '$q', function($http, $q) {
 
-  this.register = function(userData) {
+  this.perform = function(email, password) {
     var delay = $q.defer();
-    $http.post('/signup', userData)
+    $http.post('/login', { email: email, password: password })
       .success(function(data, status, headers, config) {
         delay.resolve([status, data]);
       })
