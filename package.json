@@ -6,6 +6,7 @@
   "dependencies": {
     "sails": "0.9.7",
     "grunt": "0.4.1",
+    "grunt-cli": "~0.1.11",
     "sails-disk": "~0.9.0",
     "ejs": "0.8.4",
     "optimist": "0.3.4",
@@ -20,7 +21,8 @@
   },
   "scripts": {
     "start": "node app.js",
-    "debug": "node debug app.js"
+    "debug": "node debug app.js",
+    "postinstall": "echo postinstall time; ./node_modules/.bin/grunt build"
   },
   "main": "app.js",
   "repository": "",
