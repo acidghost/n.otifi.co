@@ -44,6 +44,15 @@
 
 		</div>
 
+		<div ng-show="isViewLoading" id="loading-overlay">
+			<div>
+				<p>Your page is loading...</p>
+				<div class="progress progress-striped active">
+					<div class="progress-bar progress-bar-info"  role="progressbar" style="width: 100%">&nbsp;</div>
+				</div>
+			</div>
+		</div>
+
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
 		<script>
 			(function (i, s, o, g, r, a, m) {

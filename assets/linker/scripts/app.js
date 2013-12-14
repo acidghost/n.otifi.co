@@ -30,4 +30,18 @@ angular.module('n.coApp', ['n.coResources', 'n.coServices', 'n.coDirectives'])
   })
   .run(function($rootScope, CONFIGS) {
     $rootScope.CONFIGS = CONFIGS;
+
+    $rootScope.isViewLoading = false;
+    $rootScope.$on('$routeChangeStart', function() {
+      $rootScope.isViewLoading = true;
+      console.log("Route start");
+    });
+    $rootScope.$on('$routeChangeSuccess', function() {
+      $rootScope.isViewLoading = false;
+      console.log("Route success");
+    });
+    $rootScope.$on('$routeChangeError', function() {
+      $rootScope.isViewLoading = false;
+      console.log("Route error");
+    });
   });
