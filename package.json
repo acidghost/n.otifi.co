@@ -23,7 +23,7 @@
   "scripts": {
     "start": "node app.js",
     "debug": "node debug app.js",
-    "postinstall": "cd ./assets; ./node_modules/.bin/bower install; cd ..; ./node_modules/.bin/grunt build"
+    "postinstall": "cd ./assets; ../node_modules/.bin/bower install; cd ..; ./node_modules/.bin/grunt build"
   },
   "main": "app.js",
   "repository": "",
