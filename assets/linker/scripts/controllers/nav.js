@@ -28,15 +28,11 @@ angular.module('n.coApp')
 
     $window.onload = function() {
       $('.navbar > .collapse').each(function() {
-        console.log("1.this: " + $(this).attr('id'));
         $(this).collapse({ toggle: false });
         $(this).on('show.bs.collapse', function() {
           var showing = $(this).attr('id');
-          console.log("Showing: " + showing);
           $('.navbar > .accordion-group.in').each(function() {
-            console.log("This: " + $(this).attr('id'));
             if($(this).attr('id') != showing) {
-              console.log("Hiding "+$(this).attr('id')+'\n\n');
               $(this).collapse('hide');
             }
           });
