@@ -40,8 +40,8 @@ angular.module('n.coApp')
       });
     };
 
-    $scope.search = function() {
-      $location.path('/search/'+$scope.name);
+    $scope.search = function(name) {
+      $location.path('/search/'+name);
     };
 
   }]);

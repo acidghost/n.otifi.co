@@ -18,7 +18,7 @@
 	</div>
 
 	<div id="search" class="collapse accordion-group">
-		<form id="search-form" class="navbar-form pull-right" role="search">
+		<form id="search-form" ng-submit="search(name)" class="navbar-form pull-right" role="search">
 			<div class="form-group col-xs-8">
 				<input ng-model="name" type="text" class="form-control input-sm" placeholder="Artist" />
 			</div>
