@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('n.coApp')
-  .controller('NavCtrl', ['$scope', '$location', '$timeout', 'Login', function ($scope, $location, $timeout, Login) {
+  .controller('NavCtrl', ['$scope', '$location', '$timeout', '$window', 'Login', function ($scope, $location, $timeout, $window, Login) {
 
     $scope.loggedIn = false;
 
@@ -26,47 +26,22 @@ angular.module('n.coApp')
 
     $scope.navbarTemplate = "linker/views/partials/navbar.html";
 
-    $scope.navigate = function(where) {
-      $location.path(where);
-    };
-
-    $scope.open = function(what) {
-      var allHidden = !$('#login-form').is(':visible') && !$('#search-form').is(':visible');
-
-      var slideOptions = {
-        duration: 300,
-        easing: 'swing'
-      }
-
-      if(allHidden) {
-        if(what == 'login') {
-          $('#login-form').slideToggle(slideOptions);
-        } else if(what == 'search') {
-          $('#search-form').slideToggle(slideOptions);
-        }
-      } else {
-        if(what == 'login') {
-          if($('#search-form').is(':visible')) {
-            slideOptions.complete = function() {
-              delete slideOptions.complete;
-              $('#login-form').slideToggle(slideOptions);
-            };
-            $('#search-form').slideUp(slideOptions);
-          } else {
-            $('#login-form').slideToggle(slideOptions);
-          }
-        } else if(what == 'search') {
-          if($('#login-form').is(':visible')) {
-            slideOptions.complete = function() {
-              delete slideOptions.complete;
-              $('#search-form').slideToggle(slideOptions);
-            };
-            $('#login-form').slideUp(slideOptions);
-          } else {
-            $('#search-form').slideToggle(slideOptions);
-          }
-        }
-      }
+    $window.onload = function() {
+      $('.navbar > .collapse').each(function() {
+        console.log("1.this: " + $(this).attr('id'));
+        $(this).collapse({ toggle: false });
+        $(this).on('show.bs.collapse', function() {
+          var showing = $(this).attr('id');
+          console.log("Showing: " + showing);
+          $('.navbar > .accordion-group.in').each(function() {
+            console.log("This: " + $(this).attr('id'));
+            if($(this).attr('id') != showing) {
+              console.log("Hiding "+$(this).attr('id')+'\n\n');
+              $(this).collapse('hide');
+            }
+          });
+        });
+      });
     };
 
     $scope.search = function() {
