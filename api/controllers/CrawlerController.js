@@ -96,7 +96,7 @@ module.exports = {
                           eventAddress: event.location.address,
                           eventStartDate: event.startDate,
                           eventEndDate: event.endDate,
-                          eventUrl: event.eventUrl
+                          eventUrl: event.eventUrl.split('http://')[1]
                         };
                         Event.create(newEvent).done(function(err, eventCreated) {
                           if(!err && eventCreated) {
@@ -106,7 +106,7 @@ module.exports = {
                               artistEvents.push(eventID);
                             }
                           } else {
-                            console.log('Err creating the event: '+err);
+                            console.log('Err creating the event: ', err);
                           }
                         });
                       }

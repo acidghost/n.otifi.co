@@ -98,13 +98,14 @@ module.exports = {
       if(resp.request._redirectsFollowed) {
         res.json({ success: false, message: 'Unable to find artist' }, 404);
       } else {
-        var $ = cheerio.load(html)('div');
+        var $ = cheerio.load(html)('div, li');
 
         $.map(function(i, divElm) {
 
           var minedEvent = {};
 
           // Getting the first of upcoming events
+          /*
           if(cheerio(divElm).hasClass('im-list')) {
             var firstUpcomingDiv = cheerio(divElm).next('div');
             var urlTag = cheerio(firstUpcomingDiv).find('a[itemprop="url"]');
@@ -131,19 +132,19 @@ module.exports = {
               eventUrl: 'http://www.residentadvisor.net'+eventUrl
             };
           }
+          */
 
           // Getting the remaining upcoming events
           if(cheerio(divElm).attr('itemtype') == 'http://data-vocabulary.org/Event') {
-            var aLinks = cheerio(divElm).find('a[itemprop="url summary"]');
+            var aLinks = cheerio(divElm).find('a[itemprop="url"], a[itemprop="url summary"]');
             var eventUrl = cheerio(aLinks).attr('href');
             var evntID = eventUrl.split('?')[1];
             var evntName = cheerio(aLinks).text();
-            var evntLocation = cheerio(divElm)
-              .find('span[itemprop="name"] > a')
-              .text() || cheerio(divElm).find('span[itemprop="name"]').text();
-            var evntAddress = cheerio(divElm)
-              .find('span[itemprop="location"] span[itemprop="address"] a')
-              .text();
+            var evntLocation = cheerio(divElm).find('span[itemprop="name"] > a').text() || cheerio(divElm).find('span[itemprop="name"]').text() ||
+              (cheerio(divElm).find('h1[itemprop="summary"] > span a:nth-child(2)').text() != '' ? cheerio(divElm).find('h1[itemprop="summary"] > span a:nth-child(1)').text() : cheerio(divElm).find('h1[itemprop="summary"] > span').text());
+            var evntAddress = cheerio(divElm).find('span[itemprop="location"] span[itemprop="address"] a').text() ||
+              cheerio(divElm).find('h1[itemprop="summary"] > span a:nth-child(2)').text() ||
+              cheerio(divElm).find('h1[itemprop="summary"] > span a:nth-child(1)').text();
             var startDate = cheerio(divElm).find('time[itemprop="startDate"]')
               .attr('datetime').split('T')[0];
             var endDate = cheerio(divElm).find('time[itemprop="endDate"]')

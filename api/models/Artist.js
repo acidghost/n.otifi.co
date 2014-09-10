@@ -29,6 +29,11 @@ module.exports = {
       required: true,
       url: true
     },
+    imageLgUrl: {
+      type: 'string',
+      required: true,
+      url: true
+    },
     events: {
       type: 'array'
     },

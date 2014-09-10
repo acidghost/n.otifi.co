@@ -21,6 +21,7 @@ var $ = require('cheerio');
 var raSearchUrl = 'http://www.residentadvisor.net/search.aspx?section=djs&searchstr=';
 var raDjUrl = 'http://www.residentadvisor.net/dj/';
 var raImageUrl = 'http://www.residentadvisor.net/images/profiles/{{name}}.jpg';           // {{name}} is a placeholder for artist's name
+var raImageLargeUrl = 'http://www.residentadvisor.net/images/profiles/lg/{{name}}.jpg';
 
 var controller;
 
@@ -57,16 +58,17 @@ module.exports = controller = {
         controller._error(500, err, res);
       }
       if (resp.request._redirectsFollowed) {
-//      console.log("Redirected!");
+      //console.log("Redirected!");
         redirected = true;
       }
-//      console.log(resp.request.redirects);
+      //console.log(resp.request.redirects);
 
       var foundedArtists = [];
 
       if(redirected) {
-        var target = $.load(html)('h1.title2 span[itemprop="name"]');
-//        console.log(target);
+        //var target = $.load(html)('h1.title2 span[itemprop="name"]');
+        var target = $.load(html)('#featureHead h1');
+        //console.log(target);
         target.map(function(i, elm) {
           var name = $(elm).text();
           var raName = resp.request.redirects[0].redirectUri.split('/dj/')[1];
@@ -74,7 +76,8 @@ module.exports = controller = {
             RAname: raName,
             RAurl: raDjUrl + raName,
             name: name,
-            imageUrl: raImageUrl.replace('{{name}}', raName)
+            imageUrl: raImageUrl.replace('{{name}}', raName),
+            imageLgUrl: raImageLargeUrl.replace('{{name}}', raName)
           });
         });
       } else {

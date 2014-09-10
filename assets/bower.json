@@ -19,13 +19,11 @@
     "json3": "~3.2.4",
     "es5-shim": "~2.0.8",
     "angular-resource": "~1.2.5",
-    "bootstrap": "~3.0.3"
+    "bootstrap": "~3.0.3",
+    "angular-route": "~1.2.24"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.5",
     "angular-scenario": "~1.2.5"
-  },
-  "resolutions": {
-    "angular": "~1.2.5"
   }
 }
